@@ -1,9 +1,9 @@
 package routers
 
 import (
-	"github.com/gin-gonic/gin"
-
 	controllerArticleV1 "gin/controller/article/v1"
+
+	"github.com/gin-gonic/gin"
 )
 
 func LoadApi(e *gin.Engine) {
