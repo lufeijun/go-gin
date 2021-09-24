@@ -1,9 +1,12 @@
 package v1
 
 import (
-	orm "gin/database"
 	articleModel "gin/models/article/v1"
 	structs "gin/structs"
+
+	orm "gin/database"
+
+	my "gin/models"
 )
 
 func ArticleList(id int, name string, page int64, pagesize int64) (pagestruct structs.PageStruct) {
@@ -70,6 +73,13 @@ func ArticleUpdate(id uint, name, title, content string) {
 		article.Content = content
 	}
 
+	article.UpdatedAt = my.MyTimeInit()
+
 	orm.GormDB.Updates(&article)
 
+}
+
+func ArticleDetail(id int) (article articleModel.Article) {
+	orm.GormDB.First(&article, id)
+	return
 }

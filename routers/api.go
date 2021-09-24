@@ -13,6 +13,7 @@ func LoadApi(e *gin.Engine) {
 	articleV1 := api.Group("article/v1")
 	{
 		articleV1.GET("list", controllerArticleV1.List)
+		articleV1.GET("detail", controllerArticleV1.Detail)
 		articleV1.POST("add", controllerArticleV1.Add)
 		articleV1.POST("update", controllerArticleV1.Update)
 	}

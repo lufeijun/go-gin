@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -112,4 +113,28 @@ func Update(c *gin.Context) {
 
 	c.JSON(200, res)
 
+}
+
+func Detail(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Query("id"))
+
+	res := response.Response{}
+
+	if err != nil {
+		res.Status = 1
+		res.Message = "id 字段出错"
+		c.JSON(200, res)
+		return
+	}
+
+	article := articleUltility.ArticleDetail(id)
+
+	// a := article.CreatedAt.Format("2006-01-02 15:04:05")
+
+	fmt.Println(article.CreatedAt.String())
+
+	res1 := response.ToClientData(0, "success", article)
+
+	c.JSON(200, res1)
 }
