@@ -2,14 +2,14 @@ package v1
 
 import (
 	"fmt"
-	"log"
-	"os"
+	"time"
 
 	"github.com/Shopify/sarama"
 	"github.com/gin-gonic/gin"
 
 	ginconfig "gin/config"
 	response "gin/structs"
+	mylog "gin/tool/logger"
 )
 
 func Producer(c *gin.Context) {
@@ -81,32 +81,38 @@ func Consumer(c *gin.Context) {
 		defer pc.AsyncClose()
 
 		// 同步
-		for msg := range pc.Messages() {
-			fmt.Printf("Partition:%d Offset:%d Key:%v Value:%v", msg.Partition, msg.Offset, msg.Key, msg.Value)
+		// for msg := range pc.Messages() {
+		// 	fmt.Printf("Partition:%d Offset:%d Key:%v Value:%v", msg.Partition, msg.Offset, msg.Key, msg.Value)
 
-			writeInLog("kafka 队列消息 AAAAAAAAA")
+		// 	mylog.WriteInLog("kafka 队列消息 AAAAAAAAA")
 
-			writeInLog(string(msg.Key))
-			writeInLog("kafka 队列消息 ========")
-			writeInLog(string(msg.Value))
+		// 	mylog.WriteInLog(string(msg.Key))
+		// 	mylog.WriteInLog("kafka 队列消息 ========")
+		// 	mylog.WriteInLog(string(msg.Value))
 
-			writeInLog("kafka 队列消息 BBBBBBBB")
+		// 	mylog.WriteInLog("kafka 队列消息 BBBBBBBB")
 
-		}
+		// }
 
 		// 异步从每个分区消费信息
-		// go func(sarama.PartitionConsumer) {
-		// 	for msg := range pc.Messages() {
-		// 		fmt.Printf("Partition:%d Offset:%d Key:%v Value:%v", msg.Partition, msg.Offset, msg.Key, msg.Value)
+		go func(sarama.PartitionConsumer) {
+			for msg := range pc.Messages() {
+				fmt.Printf("Partition:%d Offset:%d Key:%v Value:%v", msg.Partition, msg.Offset, msg.Key, msg.Value)
 
-		// 		writeInLog("kafka 队列消息")
+				mylog.WriteInLog("kafka 队列消息 AAAAAAAAA")
 
-		// 		writeInLog(string(msg.Key))
-		// 		writeInLog(string(msg.Value))
+				mylog.WriteInLog(string(msg.Key))
+				mylog.WriteInLog("kafka 队列消息 ========")
+				mylog.WriteInLog(string(msg.Value))
 
-		// 	}
-		// }(pc)
+				mylog.WriteInLog("kafka 队列消息 BBBBBBBB")
+
+			}
+		}(pc)
 	}
+
+	// 主线程休眠一会，防止子协程挂掉
+	time.Sleep(60 * time.Second)
 
 	c.JSON(200, res)
 
@@ -114,27 +120,8 @@ func Consumer(c *gin.Context) {
 
 func Index(c *gin.Context) {
 
-	logFile, err := os.OpenFile("./xx.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
-	if err != nil {
-		fmt.Println("open log file failed, err:", err)
-		return
-	}
+	mylog.WriteInLog("123")
 
-	log.SetOutput(logFile)
+	c.JSON(200, 1)
 
-	log.SetFlags(log.Llongfile | log.Lmicroseconds | log.Ldate)
-	log.Println("这是一条很普通的日志。")
-}
-
-func writeInLog(msg string) {
-	logFile, err := os.OpenFile("./xx.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
-	if err != nil {
-		fmt.Println("open log file failed, err:", err)
-		return
-	}
-
-	log.SetOutput(logFile)
-
-	log.SetFlags(log.Llongfile | log.Lmicroseconds | log.Ldate)
-	log.Println(msg)
 }
