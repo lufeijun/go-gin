@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"gin/routers"
+
+	mylog "gin/tool/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,6 +24,8 @@ func main() {
 	err := r.Run(":8008")
 
 	if err != nil {
-		fmt.Println("启动失败：err=%v\n", err)
+
+		mylog.WriteInLog("启动失败：err=" + err.Error())
+		return
 	}
 }
