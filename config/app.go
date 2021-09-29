@@ -15,6 +15,8 @@ var (
 	DbPass   string
 	DbConf   string
 	DbPath   = DbHost + DbPort
+
+	KafkaBroker string
 )
 
 func init() {
@@ -32,5 +34,7 @@ func init() {
 	DbUser = cfg.Section("mysql").Key("username").String()
 	DbPass = cfg.Section("mysql").Key("password").String()
 	DbConf = cfg.Section("mysql").Key("conf").String()
+
+	KafkaBroker = cfg.Section("kafka").Key("broker").String()
 
 }
