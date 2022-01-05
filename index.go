@@ -3,8 +3,6 @@ package main
 import (
 	"gin/routers"
 
-	mylog "gin/tool/logger"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,7 +23,6 @@ func main() {
 
 	if err != nil {
 
-		mylog.WriteInLog("启动失败：err=" + err.Error())
-		return
+		panic("启动失败：err=" + err.Error())
 	}
 }

@@ -4,6 +4,7 @@ import (
 	controllerArticleV1 "gin/controller/article/v1"
 
 	controllerKafkaV1 "gin/controller/kafka/v1"
+	controllerRedis "gin/controller/redis/v1"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,6 +27,14 @@ func LoadApi(e *gin.Engine) {
 		kafka.GET("index", controllerKafkaV1.Index)
 		kafka.GET("producer", controllerKafkaV1.Producer)
 		kafka.GET("consumer", controllerKafkaV1.Consumer)
+	}
+
+	// redis
+	redis := api.Group("redis/v1")
+	{
+		redis.GET("index", controllerRedis.Index)
+		redis.GET("get", controllerRedis.Get)
+		redis.GET("setnx", controllerRedis.Setnx)
 	}
 
 }

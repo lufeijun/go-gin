@@ -24,7 +24,7 @@ func Producer(c *gin.Context) {
 		Key:   sarama.StringEncoder("吉鹏"),
 		Value: sarama.StringEncoder("吉鹏123"),
 	}
-	msg.Topic = "quickstart-events"
+	msg.Topic = "jipeng_demo_1120"
 
 	// 连接kafka
 	client, err := sarama.NewSyncProducer([]string{ginconfig.KafkaBroker}, config)
@@ -65,7 +65,7 @@ func Consumer(c *gin.Context) {
 	}
 
 	// partitionList, err := consumer.Partitions("quickstart-events") // 根据topic取到所有的分区
-	partitionList, err := consumer.Partitions("quickstart-events") // 根据topic取到所有的分区
+	partitionList, err := consumer.Partitions("jipeng_demo_1120") // 根据topic取到所有的分区
 	if err != nil {
 		fmt.Printf("fail to get list of partition:err%v\n", err)
 		return
@@ -73,7 +73,7 @@ func Consumer(c *gin.Context) {
 	fmt.Println(partitionList)
 	for partition := range partitionList { // 遍历所有的分区
 		// 针对每个分区创建一个对应的分区消费者
-		pc, err := consumer.ConsumePartition("quickstart-events", int32(partition), sarama.OffsetNewest)
+		pc, err := consumer.ConsumePartition("jipeng_demo_1120", int32(partition), sarama.OffsetNewest)
 		if err != nil {
 			fmt.Printf("failed to start consumer for partition %d,err:%v\n", partition, err)
 			return
