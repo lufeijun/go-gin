@@ -5,6 +5,7 @@ import (
 
 	controllerKafkaV1 "gin/controller/kafka/v1"
 	controllerRedis "gin/controller/redis/v1"
+	controllerSession "gin/controller/session/v1"
 
 	"github.com/gin-gonic/gin"
 )
@@ -35,6 +36,15 @@ func LoadApi(e *gin.Engine) {
 		redis.GET("index", controllerRedis.Index)
 		redis.GET("get", controllerRedis.Get)
 		redis.GET("setnx", controllerRedis.Setnx)
+	}
+
+	// session
+	session := api.Group("session/v1")
+	{
+		session.GET("cookie/set", controllerSession.CookieSet)
+		session.GET("cookie/get", controllerSession.CookieGet)
+		session.GET("session/set", controllerSession.SessionSet)
+		session.GET("session/get", controllerSession.SessionGet)
 	}
 
 }
