@@ -1,17 +1,17 @@
 package v1
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 
-	response "gin/structs"
+	"gin/structs/response"
 	articleUltility "gin/ultility/article/v1"
 )
 
 // 列表
 func List(c *gin.Context) {
+	res := response.GetResponse()
 	id, err := strconv.Atoi(c.PostForm("id"))
 
 	if err != nil {
@@ -32,29 +32,27 @@ func List(c *gin.Context) {
 
 	name := c.PostForm("name")
 
-	list := articleUltility.ArticleList(id, name, page, pageSize)
+	res.Data = articleUltility.ArticleList(id, name, page, pageSize)
 
-	c.JSON(200, list)
+	c.JSON(200, res)
 }
 
 // 添加
 func Add(c *gin.Context) {
-	res := response.Response{}
+	res := response.GetResponse()
 
 	name := c.PostForm("name")
 	title := c.PostForm("title")
 	content := c.PostForm("content")
 
 	if name == "" {
-		res.Status = 1
-		res.Message = "name 字段不能为空"
+		res.SetMessage("name 字段不能为空")
 		c.JSON(200, res)
 		return
 	}
 
 	if title == "" {
-		res.Status = 1
-		res.Message = "title 字段不能为空"
+		res.SetMessage("title 字段不能为空")
 		c.JSON(200, res)
 		return
 	}
@@ -62,28 +60,23 @@ func Add(c *gin.Context) {
 	id, err := articleUltility.ArticleAdd(name, title, content)
 
 	if err != nil {
-		res.Status = 1
-		res.Message = "插入失败：" + err.Error()
+		res.SetMessage("插入失败：" + err.Error())
 		c.JSON(200, res)
 		return
 	}
 
-	res.Status = 0
-	res.Message = "success"
 	res.Data = id
-
 	c.JSON(200, res)
 
 }
 
 // 更新
 func Update(c *gin.Context) {
-	res := response.Response{}
+	res := response.GetResponse()
 	id, err := strconv.Atoi(c.PostForm("id"))
 
 	if err != nil {
-		res.Status = 1
-		res.Message = "id 字段出错"
+		res.SetMessage("id 字段出错")
 		c.JSON(200, res)
 		return
 	}
@@ -92,24 +85,7 @@ func Update(c *gin.Context) {
 	title := c.PostForm("title")
 	content := c.PostForm("content")
 
-	// if name == "" {
-	// 	res.Status = 1
-	// 	res.Message = "name 字段不能为空"
-	// 	c.JSON(200, res)
-	// 	return
-	// }
-
-	// if title == "" {
-	// 	res.Status = 1
-	// 	res.Message = "title 字段不能为空"
-	// 	c.JSON(200, res)
-	// 	return
-	// }
-
 	articleUltility.ArticleUpdate(uint(id), name, title, content)
-
-	res.Status = 1
-	res.Message = "更新成功"
 
 	c.JSON(200, res)
 
@@ -117,24 +93,23 @@ func Update(c *gin.Context) {
 
 func Detail(c *gin.Context) {
 
-	id, err := strconv.Atoi(c.Query("id"))
+	id, err := strconv.Atoi(c.PostForm("id"))
 
-	res := response.Response{}
+	res := response.GetResponse()
 
 	if err != nil {
-		res.Status = 1
-		res.Message = "id 字段出错"
+		res.SetMessage("id 字段出错")
 		c.JSON(200, res)
 		return
 	}
 
-	article := articleUltility.ArticleDetail(id)
+	article, err := articleUltility.ArticleDetail(id)
 
-	// a := article.CreatedAt.Format("2006-01-02 15:04:05")
+	if err != nil {
+		res.SetMessage("未找到")
+	} else {
+		res.Data = article
+	}
 
-	fmt.Println(article.CreatedAt.String())
-
-	res1 := response.ToClientData(0, "success", article)
-
-	c.JSON(200, res1)
+	c.JSON(200, res)
 }

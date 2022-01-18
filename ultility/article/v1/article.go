@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"errors"
 	articleModel "gin/models/article/v1"
 	structs "gin/structs"
 
@@ -71,13 +72,15 @@ func ArticleUpdate(id uint, name, title, content string) {
 		article.Content = content
 	}
 
-	// article.UpdatedAt = my.MyTimeInit()
-
 	orm.GormDB.Updates(&article)
 
 }
 
-func ArticleDetail(id int) (article articleModel.Article) {
-	orm.GormDB.First(&article, id)
+func ArticleDetail(id int) (article articleModel.Article, err error) {
+	result := orm.GormDB.First(&article, id)
+
+	if result.Error != nil {
+		err = errors.New("未找到对应详情")
+	}
 	return
 }

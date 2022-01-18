@@ -5,12 +5,11 @@ import (
 )
 
 type Article struct {
-	ID        uint `json: "id"`
-	UserId    uint `gorm:"column:user_id"`
-	Name      string
-	Title     string
-	Content   string
-	Date      models.GormTime
-	CreatedAt models.GormTime
-	UpdatedAt models.GormTime
+	ID        uint            `json:"id"`
+	UserId    uint            `json:"user_id"`
+	Name      string          `json:"name"`
+	Title     string          `json:"title"`
+	Content   string          `json:"content"`
+	CreatedAt models.GormTime `json:"created_at"`
+	UpdatedAt models.GormTime `json:"updated_at"`
 }

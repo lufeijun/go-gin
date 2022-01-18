@@ -1,9 +1,18 @@
-package structs
+package response
 
 type Response struct {
 	Status  int         `json:"status"`
-	Message string      `json:"msg"`
+	Message string      `json:"message" default:"success"`
 	Data    interface{} `json:"data"`
+}
+
+func GetResponse() (res Response) {
+	res = Response{}
+
+	res.Message = "success"
+	res.Status = 0
+	res.Data = struct{}{}
+	return
 }
 
 func ToClientData(status int, message string, data interface{}) (res Response) {
@@ -21,4 +30,13 @@ func (this *Response) ToClientData() {
 	} else {
 		this.Status = 1 // 有错误消息了
 	}
+}
+
+func (this *Response) SetData(data interface{}) {
+	this.Data = data
+}
+
+func (this *Response) SetMessage(msg string) {
+	this.Status = 1 // 一旦设置 message 。表示有错误信息了，同时设置一下 status
+	this.Message = msg
 }

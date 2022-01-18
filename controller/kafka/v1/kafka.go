@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	ginconfig "gin/config"
-	response "gin/structs"
+	"gin/structs/response"
 	mylog "gin/tool/logger"
 )
 
