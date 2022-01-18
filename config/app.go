@@ -1,8 +1,6 @@
 package config
 
 import (
-	"fmt"
-
 	"gopkg.in/ini.v1"
 )
 
@@ -23,8 +21,7 @@ func init() {
 
 	cfg, err := ini.Load(".env")
 	if err != nil {
-		fmt.Println("读取ini文件失败")
-		//   log.Fatalln(err)
+		panic("读取ini文件失败")
 	}
 
 	APP_NAME = cfg.Section("").Key("app_mode").String()

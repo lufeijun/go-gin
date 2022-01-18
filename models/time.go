@@ -2,23 +2,17 @@ package models
 
 import (
 	"database/sql/driver"
-	"errors"
 	"fmt"
 	"strings"
 	"time"
 )
 
-type MyTime time.Time // 导致时间不会自动更新了
-
-func MyTimeInit() (mytime MyTime) {
-	timeNow := time.Now().Format("2006-01-02 15:04:05")
-	t1, _ := time.Parse("2006-01-02 15:04:05", timeNow)
-
-	mytime = MyTime(t1)
-	return
+type GormTime struct {
+	time.Time
 }
-func (t *MyTime) UnmarshalJSON(data []byte) error {
-	fmt.Println("time: un-json")
+
+// 2. 为 Xtime 重写 MarshaJSON 和 UnmarshalJSON 方法，在此方法中实现自定义格式的转换；
+func (t *GormTime) UnmarshalJSON(data []byte) error {
 	if string(data) == "null" {
 		return nil
 	}
@@ -28,39 +22,30 @@ func (t *MyTime) UnmarshalJSON(data []byte) error {
 	//去除接收的str收尾多余的"
 	timeStr := strings.Trim(str, "\"")
 	t1, err := time.Parse("2006-01-02 15:04:05", timeStr)
-	*t = MyTime(t1)
+	*t = GormTime{t1}
 	return err
 }
 
-func (t MyTime) MarshalJSON() ([]byte, error) {
-	fmt.Println("time: MarshalJSON")
-
-	formatted := fmt.Sprintf("\"%v\"", time.Time(t).Format("2006-01-02 15:04:05"))
-	return []byte(formatted), nil
+func (t GormTime) MarshalJSON() ([]byte, error) {
+	output := fmt.Sprintf("\"%s\"", t.Format("2006-01-02 15:04:05"))
+	return []byte(output), nil
 }
 
-func (t MyTime) Value() (driver.Value, error) {
-	// MyTime 转换成 time.Time 类型
-	fmt.Println("time: Value")
-	// tTime := time.Time(t)
-	// fmt.Println(t)
-	tTime := time.Time(time.Now())
-	return tTime.Format("2006-01-02 15:04:05"), nil
-}
-
-func (t *MyTime) Scan(v interface{}) error {
-	fmt.Println("time: Scan")
-	switch vt := v.(type) {
-	case time.Time:
-		// 字符串转成 time.Time 类型
-		*t = MyTime(vt)
-	default:
-		return errors.New("类型处理错误")
+// 3. 为 Xtime 实现 Value 方法，写入数据库时会调用该方法将自定义时间类型转换并写入数据库；
+func (t GormTime) Value() (driver.Value, error) {
+	var zeroTime time.Time
+	if t.Time.UnixNano() == zeroTime.UnixNano() {
+		return nil, nil
 	}
-	return nil
+	return t.Time, nil
 }
 
-func (t *MyTime) String() string {
-	fmt.Println("string")
-	return fmt.Sprintf("hhh:%s", time.Time(*t).String())
+// 4. 为 Xtime 实现 Scan 方法，读取数据库时会调用该方法将时间数据转换成自定义时间类型；
+func (t *GormTime) Scan(v interface{}) error {
+	value, ok := v.(time.Time)
+	if ok {
+		*t = GormTime{Time: value}
+		return nil
+	}
+	return fmt.Errorf("can not convert %v to timestamp", v)
 }
