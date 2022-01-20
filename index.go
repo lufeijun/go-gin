@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gin/config"
 	"gin/routers"
 
 	"github.com/gin-gonic/gin"
@@ -11,6 +12,11 @@ func init() {
 }
 
 func main() {
+
+	// 设置运行模式
+	if config.APP_MODE == "server" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	// 1.创建路由
 	// r := gin.Default()

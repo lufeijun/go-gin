@@ -6,6 +6,7 @@ import (
 
 var (
 	APP_NAME string
+	APP_MODE string
 	DbHost   string
 	DbPort   string
 	DbDB     string
@@ -24,7 +25,8 @@ func init() {
 		panic("读取ini文件失败")
 	}
 
-	APP_NAME = cfg.Section("").Key("app_mode").String()
+	APP_NAME = cfg.Section("").Key("app_name").String()
+	APP_MODE = cfg.Section("").Key("app_mode").String()
 	DbHost = cfg.Section("mysql").Key("host").String()
 	DbPort = cfg.Section("mysql").Key("port").String()
 	DbDB = cfg.Section("mysql").Key("dbname").String()
