@@ -2,8 +2,10 @@ package routers
 
 import (
 	controllerArticleV1 "gin/controller/article/v1"
+	"gin/middleware"
 
 	controllerKafkaV1 "gin/controller/kafka/v1"
+	controllerManager "gin/controller/manager/v1"
 	controllerRedis "gin/controller/redis/v1"
 	controllerSession "gin/controller/session/v1"
 
@@ -13,6 +15,19 @@ import (
 func LoadApi(e *gin.Engine) {
 
 	api := e.Group("api")
+
+	e.POST("api/login", controllerManager.Login)
+
+	api.Use(middleware.Login())
+
+	// redis session
+	// store , _ := redis
+
+	// 管理岗部分
+	managerV1 := api.Group("manager/v1")
+	{
+		managerV1.POST("add", controllerManager.Add)
+	}
 
 	articleV1 := api.Group("article/v1")
 	{

@@ -25,7 +25,7 @@ func main() {
 	routers.LoadApi(r)
 
 	// 3.监听端口，默认在8080
-	err := r.Run(":8008")
+	err := r.Run(":" + config.APP_PORT)
 
 	if err != nil {
 

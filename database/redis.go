@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
+	"gin/config"
 	"sync"
 	"time"
 
@@ -38,9 +39,9 @@ func NewRedisTool() *redis.Client {
 
 	redisOnce.Do(func() {
 		rdb = redis.NewClient(&redis.Options{
-			Addr:         "localhost:6379",
-			Password:     "123456",
-			DB:           1,
+			Addr:         config.REDIS_ADDR,
+			Password:     config.REDIS_PASS,
+			DB:           config.REDIS_DB,
 			DialTimeout:  10 * time.Second,
 			ReadTimeout:  30 * time.Second,
 			WriteTimeout: 30 * time.Second,
