@@ -21,11 +21,21 @@ func Login(c *gin.Context) {
 		res.SetMessage("pwd 不能为空")
 	}
 
-	err := managerUltility.Login(email, pwd)
+	err := managerUltility.Login(email, pwd, c)
 
 	if err != nil {
 		res.SetMessage(err.Error())
 	}
+
+	c.JSON(http.StatusOK, res)
+	return
+}
+
+func Logout(c *gin.Context) {
+
+	res := response.GetResponse()
+
+	managerUltility.Logout(c)
 
 	c.JSON(http.StatusOK, res)
 	return

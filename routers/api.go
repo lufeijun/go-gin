@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"gin/config"
 	controllerArticleV1 "gin/controller/article/v1"
 	"gin/middleware"
 
@@ -9,19 +10,25 @@ import (
 	controllerRedis "gin/controller/redis/v1"
 	controllerSession "gin/controller/session/v1"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 )
 
 func LoadApi(e *gin.Engine) {
 
+	// redis session
+	store, _ := redis.NewStoreWithDB(config.SESSION_REDIS_CONNECTIONS, "tcp", config.SESSION_REDIS_ADDR, config.SESSION_REDIS_PASS, config.SESSION_REDIS_DB, []byte("secret"))
+	e.Use(sessions.Sessions(config.SESSION_KEY, store))
+
 	api := e.Group("api")
 
+	// 登录接口
 	e.POST("api/login", controllerManager.Login)
+	e.POST("api/logout", controllerManager.Logout)
 
+	// 中间件
 	api.Use(middleware.Login())
-
-	// redis session
-	// store , _ := redis
 
 	// 管理岗部分
 	managerV1 := api.Group("manager/v1")

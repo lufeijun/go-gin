@@ -9,6 +9,16 @@ var (
 	APP_MODE string
 	APP_PORT string
 
+	// session
+	SESSION_KEY        string
+	SESSION_COOKIE_KEY string
+	SESSION_MAX_AGE    int
+	// session redis
+	SESSION_REDIS_ADDR        string
+	SESSION_REDIS_PASS        string
+	SESSION_REDIS_DB          string
+	SESSION_REDIS_CONNECTIONS int
+
 	// redis
 	REDIS_ADDR string
 	REDIS_PASS string
@@ -45,11 +55,27 @@ func init() {
 	DbConf = cfg.Section("mysql").Key("conf").String()
 
 	// redis
-	REDIS_ADDR = cfg.Section("redis").Key("host").String()
+	REDIS_ADDR = cfg.Section("redis").Key("addr").String()
 	REDIS_PASS = cfg.Section("redis").Key("password").String()
 	REDIS_DB, err = cfg.Section("redis").Key("db").Int()
 	if err != nil {
-		panic("REDIS_DB 有误")
+		REDIS_DB = 0
+	}
+
+	// session
+	SESSION_KEY = cfg.Section("session").Key("cookie_key").String()
+	SESSION_COOKIE_KEY = cfg.Section("session").Key("cookie_key").String()
+	SESSION_MAX_AGE, err = cfg.Section("session").Key("session_max_age").Int()
+	if err != nil {
+		SESSION_MAX_AGE = 7200
+	}
+
+	SESSION_REDIS_ADDR = cfg.Section("session").Key("redis_addr").String()
+	SESSION_REDIS_PASS = cfg.Section("session").Key("redis_password").String()
+	SESSION_REDIS_DB = cfg.Section("session").Key("redis_db").String()
+	SESSION_REDIS_CONNECTIONS, err = cfg.Section("session").Key("redis_connections").Int()
+	if err != nil {
+		SESSION_REDIS_CONNECTIONS = 10
 	}
 
 	// kafka

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/sessions"
 )
 
 func CookieSet(c *gin.Context) {
@@ -39,7 +39,11 @@ func CookieGet(c *gin.Context) {
 }
 
 func SessionSet(c *gin.Context) {
-	store := sessions.NewCookieStore([]byte("session-key"))
+
+	//
+	// store := sessions.NewCookieStore([]byte("session-key"))
+
+	store, _ := redis.NewStoreWithDB(10, "tcp", "127.0.0.1:6379", "123456", "10", []byte("session-key"))
 
 	session, _ := store.Get(c.Request, "session-name123")
 
@@ -59,7 +63,9 @@ func SessionSet(c *gin.Context) {
 }
 
 func SessionGet(c *gin.Context) {
-	store := sessions.NewCookieStore([]byte("session-key"))
+	// store := sessions.NewCookieStore([]byte("session-key"))
+
+	store, _ := redis.NewStoreWithDB(10, "tcp", "127.0.0.1:6379", "123456", "10", []byte("session-key"))
 
 	session, _ := store.Get(c.Request, "session-name123")
 
