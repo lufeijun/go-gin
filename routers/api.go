@@ -42,6 +42,17 @@ func LoadApi(e *gin.Engine) {
 		articleV1.GET("detail", controllerArticleV1.Detail)
 		articleV1.POST("add", controllerArticleV1.Add)
 		articleV1.POST("update", controllerArticleV1.Update)
+
+		// 类目
+		articleCategoryV1 := articleV1.Group("category")
+		{
+			articleCategoryV1.POST("list", controllerArticleV1.CategoryList)
+			articleCategoryV1.POST("add", controllerArticleV1.CategoryAdd)
+			articleCategoryV1.POST("update/:id", controllerArticleV1.CategoryUpdate)
+			articleCategoryV1.POST("detail/:id", controllerArticleV1.CategoryDetail)
+			articleCategoryV1.POST("test", controllerArticleV1.CategoryTest)
+		}
+
 	}
 
 	// kafka 部分

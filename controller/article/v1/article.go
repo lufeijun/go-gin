@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -112,4 +113,110 @@ func Detail(c *gin.Context) {
 	}
 
 	c.JSON(200, res)
+}
+
+// 类别部分
+func CategoryList(c *gin.Context) {
+	res := response.GetResponse()
+
+	category, err := articleUltility.CategoryList()
+
+	if err != nil {
+		res.SetMessage(err.Error())
+	} else {
+		res.SetData(category)
+	}
+
+	c.JSON(http.StatusOK, res)
+	return
+}
+
+func CategoryAdd(c *gin.Context) {
+	res := response.GetResponse()
+
+	name := c.PostForm("name")
+
+	if name == "" {
+		res.SetMessage("name 字段出错")
+		c.JSON(200, res)
+		return
+	}
+
+	level, err := strconv.Atoi(c.PostForm("level"))
+	if err != nil {
+		level = 1
+	}
+
+	parentId, err := strconv.Atoi(c.PostForm("parent_id"))
+	if err != nil {
+		parentId = 0
+	}
+
+	category, err := articleUltility.CategoryAdd(name, level, parentId)
+
+	if err != nil {
+		res.SetMessage("添加失败")
+		c.JSON(200, res)
+		return
+	}
+
+	res.SetData(category)
+
+	c.JSON(http.StatusOK, res)
+	return
+}
+
+func CategoryUpdate(c *gin.Context) {
+	res := response.GetResponse()
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		res.SetMessage("id 参数有误")
+		c.JSON(http.StatusOK, res)
+		return
+	}
+
+	name := c.PostForm("name")
+
+	category, err := articleUltility.CategoryUpdate(id, name)
+
+	if err != nil {
+		res.SetMessage(err.Error())
+	} else {
+		res.SetData(category)
+	}
+
+	c.JSON(http.StatusOK, res)
+	return
+
+}
+
+func CategoryDetail(c *gin.Context) {
+	res := response.GetResponse()
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		res.SetMessage("id 参数有误")
+		c.JSON(http.StatusOK, res)
+		return
+	}
+
+	category, err := articleUltility.CategoryDetail(id)
+
+	if err != nil {
+		res.SetMessage(err.Error())
+	} else {
+		res.SetData(category)
+	}
+
+	c.JSON(http.StatusOK, res)
+	return
+}
+
+func CategoryTest(c *gin.Context) {
+	res := response.GetResponse()
+
+	articleUltility.CategoryTest()
+
+	c.JSON(http.StatusOK, res)
 }
