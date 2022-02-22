@@ -27,6 +27,6 @@ type CategoryChildren struct {
 }
 
 func (CategoryChildren) TableName() string {
-	// return "articles_category"
-	return "articles_category_bak"
+	return "articles_category"
+	// return "articles_category_bak"
 }

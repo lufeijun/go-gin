@@ -9,6 +9,7 @@ import (
 	controllerManager "gin/controller/manager/v1"
 	controllerRedis "gin/controller/redis/v1"
 	controllerSession "gin/controller/session/v1"
+	controllerTest "gin/controller/test"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
@@ -28,6 +29,8 @@ func LoadApi(e *gin.Engine) {
 	e.POST("api/logout", controllerManager.Logout)
 
 	// 中间件
+	api.Use(middleware.ErrorHandler())
+	api.Use(middleware.RecoverHandler())
 	api.Use(middleware.Login())
 
 	// 管理岗部分
@@ -80,4 +83,11 @@ func LoadApi(e *gin.Engine) {
 		session.GET("session/get", controllerSession.SessionGet)
 	}
 
+	// 测试
+	test := api.Group("test")
+	{
+		test.GET("email/send", controllerTest.SendEmail)
+		test.GET("error", controllerTest.Error)
+		test.GET("panic", controllerTest.Panic)
+	}
 }

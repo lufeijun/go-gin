@@ -9,6 +9,15 @@ var (
 	APP_MODE string
 	APP_PORT string
 
+	// email
+	MAIL_DRIVER   string
+	MAIL_HOST     string
+	MAIL_PORT     int
+	MAIL_FROM     string
+	MAIL_PASSWORD string
+	MAIL_NAME     string
+	MAIL_IS_SEND  bool
+
 	// session
 	SESSION_KEY        string
 	SESSION_COOKIE_KEY string
@@ -47,6 +56,16 @@ func init() {
 	APP_MODE = cfg.Section("app").Key("mode").String()
 	APP_PORT = cfg.Section("app").Key("port").String()
 
+	// 邮箱
+	MAIL_DRIVER = cfg.Section("email").Key("drive").String()
+	MAIL_HOST = cfg.Section("email").Key("host").String()
+	MAIL_PORT, _ = cfg.Section("email").Key("port").Int()
+	MAIL_FROM = cfg.Section("email").Key("from").String()
+	MAIL_PASSWORD = cfg.Section("email").Key("password").String()
+	MAIL_NAME = cfg.Section("email").Key("name").String()
+	MAIL_IS_SEND, _ = cfg.Section("email").Key("is_send").Bool()
+
+	// mysql
 	DbHost = cfg.Section("mysql").Key("host").String()
 	DbPort = cfg.Section("mysql").Key("port").String()
 	DbDB = cfg.Section("mysql").Key("dbname").String()
