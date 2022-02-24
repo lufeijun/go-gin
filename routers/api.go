@@ -89,5 +89,6 @@ func LoadApi(e *gin.Engine) {
 		test.GET("email/send", controllerTest.SendEmail)
 		test.GET("error", controllerTest.Error)
 		test.GET("panic", controllerTest.Panic)
+		test.GET("log", controllerTest.Log)
 	}
 }

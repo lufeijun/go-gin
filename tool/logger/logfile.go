@@ -1,12 +1,12 @@
 package logger
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
 )
 
+// go 系统自带的
 func WriteInLog(msg string) {
 
 	dir := "./logs/"
@@ -14,8 +14,7 @@ func WriteInLog(msg string) {
 
 	logFile, err := os.OpenFile(dir+filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
-		fmt.Println("open log file failed, err:", err)
-		return
+		panic("日志写入失败, err:" + err.Error())
 	}
 
 	log.SetOutput(logFile)
