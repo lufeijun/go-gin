@@ -3,12 +3,16 @@ package main
 import (
 	"gin/config"
 	"gin/routers"
+	"gin/tool/logger"
 
 	"github.com/gin-gonic/gin"
 )
 
+// 初始化一写东西
 func init() {
 
+	// 日志函数
+	logger.InitZapLogger()
 }
 
 func main() {

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"gin/structs/response"
+	"gin/tool/logger"
 	"net/http"
 	"strconv"
 	"time"
@@ -66,13 +67,24 @@ func Log(c *gin.Context) {
 
 	// log1()
 
-	log2()
+	// log2()
 
 	// log3()
+
+	//
+	log4()
 
 	res := response.GetResponse()
 	c.JSON(http.StatusOK, res)
 	return
+}
+
+func log4() {
+	logger.ZapLog.Info(
+		"log4",
+		zap.String("name", "张三"),
+		zap.String("name", "李四"),
+	)
 }
 
 func log1() {

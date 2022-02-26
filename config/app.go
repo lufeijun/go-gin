@@ -5,9 +5,10 @@ import (
 )
 
 var (
-	APP_NAME string
-	APP_MODE string
-	APP_PORT string
+	APP_NAME  string
+	APP_MODE  string
+	APP_PORT  string
+	APP_DEBUG bool
 
 	// email
 	MAIL_DRIVER   string
@@ -55,6 +56,10 @@ func init() {
 	APP_NAME = cfg.Section("app").Key("name").String()
 	APP_MODE = cfg.Section("app").Key("mode").String()
 	APP_PORT = cfg.Section("app").Key("port").String()
+	APP_DEBUG, err = cfg.Section("app").Key("debug").Bool()
+	if err != nil {
+		APP_DEBUG = false
+	}
 
 	// 邮箱
 	MAIL_DRIVER = cfg.Section("email").Key("drive").String()

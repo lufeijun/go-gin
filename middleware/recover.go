@@ -6,26 +6,36 @@ import (
 	"fmt"
 	"gin/config"
 	"gin/structs/response"
+	"gin/tool/logger"
 	"net/http"
 	"runtime/debug"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-gomail/gomail"
+	"go.uber.org/zap"
 )
 
 func RecoverHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
+				errMsg := fmt.Errorf("%v", err).Error()
 				// 记录日志
-				sendToLog(c, fmt.Errorf("%v", err).Error())
+				sendToLog(c, errMsg)
 
 				// 发送错误邮件
-				sendToEmail(c, fmt.Errorf("%v", err).Error())
+				sendToEmail(c, errMsg)
 
 				res := response.GetResponse()
-				res.SetMessage("系统错误")
+
+				if config.APP_DEBUG {
+					res.SetMessage(errMsg)
+					res.SetData(string(debug.Stack()))
+				} else {
+					res.SetMessage("系统错误")
+				}
+
 				c.JSON(http.StatusOK, res)
 				c.Abort()
 			}
@@ -37,7 +47,10 @@ func RecoverHandler() gin.HandlerFunc {
 
 // 记录日志
 func sendToLog(c *gin.Context, msg string) {
-
+	logger.ZapLog.Info(
+		msg,
+		zap.String("debug", string(debug.Stack())),
+	)
 }
 
 //
