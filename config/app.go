@@ -5,10 +5,11 @@ import (
 )
 
 var (
-	APP_NAME  string
-	APP_MODE  string
-	APP_PORT  string
-	APP_DEBUG bool
+	APP_NAME    string
+	APP_MODE    string
+	APP_PORT    string
+	APP_DEBUG   bool
+	APP_IS_CRON bool
 
 	// email
 	MAIL_DRIVER   string
@@ -59,6 +60,11 @@ func init() {
 	APP_DEBUG, err = cfg.Section("app").Key("debug").Bool()
 	if err != nil {
 		APP_DEBUG = false
+	}
+
+	APP_IS_CRON, err = cfg.Section("app").Key("is_cron").Bool()
+	if err != nil {
+		APP_IS_CRON = false
 	}
 
 	// 邮箱

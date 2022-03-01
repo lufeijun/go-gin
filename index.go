@@ -2,6 +2,7 @@ package main
 
 import (
 	"gin/config"
+	"gin/cron"
 	"gin/routers"
 	"gin/tool/logger"
 
@@ -13,6 +14,11 @@ func init() {
 
 	// 日志函数
 	logger.InitZapLogger()
+
+	// 定时任务
+	if config.APP_IS_CRON {
+		cron.InitCron()
+	}
 }
 
 func main() {
