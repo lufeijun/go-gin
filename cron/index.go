@@ -2,7 +2,6 @@ package cron
 
 import (
 	"fmt"
-	"gin/models/test"
 	"gin/tool/logger"
 	"time"
 
@@ -22,7 +21,7 @@ func InitCron() {
 
 		c.AddFunc("1/30 * * * * *", func() {
 			fmt.Println("Run models.CleanAllTag...")
-			test.UpdateTest0301Cron()
+			// test.UpdateTest0301Cron()
 		})
 
 		c.Start()
