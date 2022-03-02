@@ -9,6 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 20220302 之前的文件结构逻辑，准备重新整理一下文件目录结构
+
 // 初始化一写东西
 func init() {
 
