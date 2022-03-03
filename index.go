@@ -3,6 +3,8 @@ package main
 import (
 	"gin/config"
 	"gin/cron"
+	"gin/middleware/mwerror"
+	"gin/middleware/mwrecover"
 	"gin/routers"
 	"gin/tool/logger"
 
@@ -29,16 +31,18 @@ func main() {
 	}
 
 	// 1.创建路由
-	// r := gin.Default()
 	r := gin.New()
 
-	routers.LoadApi(r)
+	// 两个基础的中间件，处理 err 和 panic
+	r.Use(mwerror.ErrorHandler())
+	r.Use(mwrecover.RecoverHandler())
+
+	// 路由 登录控制由 session 来控制
+	routers.InitRouter(r)
 
 	// 3.监听端口，默认在8080
 	err := r.Run(":" + config.APP_PORT)
-
 	if err != nil {
-
 		panic("启动失败：err=" + err.Error())
 	}
 }
