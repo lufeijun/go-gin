@@ -16,6 +16,10 @@ func LoadApi(api *gin.RouterGroup) {
 	{
 		testApi.GET("index", test.Index)
 		testApi.GET("panic", test.Panic)
+
+		// redis
+		testApi.GET("redis/set", test.RedisSet)
+		testApi.GET("redis/get", test.RedisGet)
 	}
 	// v2 版
 	testApiV2 := api.Group("test/v2")
