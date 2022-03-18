@@ -1,6 +1,7 @@
 package apis
 
 import (
+	"gin/controller/v1/article"
 	"gin/controller/v1/manager"
 	"gin/controller/v1/test"
 	"gin/controller/v2/testv2"
@@ -34,4 +35,24 @@ func LoadApi(api *gin.RouterGroup) {
 		managerV1.POST("logout", manager.Logout)
 		managerV1.POST("add", manager.Add)
 	}
+
+	// 文章部分
+	articleV1 := api.Group("article/v1")
+	{
+		articleV1.POST("list", article.List)
+		articleV1.POST("detail/:id", article.Detail)
+		articleV1.POST("add", article.Add)
+		articleV1.POST("update/:id", article.Update)
+
+		// 类目
+		articleCategoryV1 := articleV1.Group("category")
+		{
+			articleCategoryV1.POST("list", article.CategoryList)
+			articleCategoryV1.POST("add", article.CategoryAdd)
+			articleCategoryV1.POST("update/:id", article.CategoryUpdate)
+			articleCategoryV1.POST("detail/:id", article.CategoryDetail)
+		}
+
+	}
+
 }
