@@ -21,6 +21,13 @@ func LoadApi(api *gin.RouterGroup) {
 		// redis
 		testApi.GET("redis/set", test.RedisSet)
 		testApi.GET("redis/get", test.RedisGet)
+
+		kafkatest := testApi.Group("kafka")
+		{
+			kafkatest.GET("producer", test.KafkaProducer)
+			kafkatest.GET("consumer", test.KafkaConsumer)
+		}
+
 	}
 	// v2 版
 	testApiV2 := api.Group("test/v2")
