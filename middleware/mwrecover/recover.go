@@ -26,7 +26,8 @@ func RecoverHandler() gin.HandlerFunc {
 				sendToLog(c, errMsg)
 
 				// 发送错误邮件
-				sendToEmail(c, errMsg)
+				// 以协程的方式发送错误邮件
+				go sendToEmail(c, errMsg)
 
 				res := response.GetResponse()
 
@@ -57,10 +58,24 @@ func sendToLog(c *gin.Context, msg string) {
 // 发送邮件，将来设置成队列，通过队列发送报错邮件
 func sendToEmail(c *gin.Context, msg string) {
 
+	defer func() {
+		if err := recover(); err != nil {
+			// 打印异常，关闭资源，退出此函数
+			logger.ZapLog.Info(
+				msg,
+				zap.String("debug", err.(string)),
+			)
+		}
+	}()
+
 	// 加个开关
 	if !config.MAIL_IS_SEND {
 		return
 	}
+
+	// 没有这个，会导致获取不到所有参数，
+	// 原因：在 PostForm 方法底层，有个类似 init 初始化参数的方法，起码得调用一次
+	c.PostForm("ooxx")
 
 	// 构建邮箱内容
 	var body string

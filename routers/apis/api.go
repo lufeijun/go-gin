@@ -28,6 +28,12 @@ func LoadApi(api *gin.RouterGroup) {
 			kafkatest.GET("consumer", test.KafkaConsumer)
 		}
 
+		// 协程
+		asynctest := testApi.Group("async")
+		{
+			asynctest.POST("one", test.AsyncOne)
+		}
+
 	}
 	// v2 版
 	testApiV2 := api.Group("test/v2")
