@@ -34,6 +34,13 @@ func LoadApi(api *gin.RouterGroup) {
 			asynctest.POST("one", test.AsyncOne)
 		}
 
+		// 数据库测试
+		mysqltest := testApi.Group("mysql")
+		{
+			mysqltest.POST("one", test.MysqlOne)
+			mysqltest.POST("two", test.Mysql2)
+		}
+
 	}
 	// v2 版
 	testApiV2 := api.Group("test/v2")

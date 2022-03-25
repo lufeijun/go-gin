@@ -26,6 +26,9 @@ func init() {
 	sqlDB.SetMaxIdleConns(2)
 	sqlDB.SetMaxOpenConns(5)
 
+	// 这里不能有这句话，否则链接都被关闭了
+	// defer sqlDB.Close()
+
 }
 
 func Paginate(page int64, pageSize int64) func(db *gorm.DB) *gorm.DB {
