@@ -18,3 +18,5 @@ gin 练手
 1、SetMaxIdleConns设置空闲链接 SetMaxOpenConns 设置最大链接，如果当前并发量大于 SetMaxOpenConns 的值，多余的请求则会被阻塞住。SetMaxOpenConns 可以设置为 -1 。表示不限制
 
 2、事务，如果没有进行 commit | rollback，那么这条链接就处于被占用状态，
+
+3、在使用 Context 设置超时时间后，如果在正常程序中，没有执行 commit | rollback，在 context 超时之后，会自动执行 rollback 函数

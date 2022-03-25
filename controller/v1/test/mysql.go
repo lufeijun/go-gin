@@ -1,6 +1,7 @@
 package test
 
 import (
+	"context"
 	"fmt"
 	"gin/database/orm"
 	"gin/models"
@@ -10,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // 数据库操作测试
@@ -50,18 +52,70 @@ func MysqlOne(c *gin.Context) {
 func Mysql2(c *gin.Context) {
 	res := response.GetResponse()
 
-	tx := orm.MysqlOrm.Statement.DB.Begin()
+	// 手动事务
+	// transaction1()
+
+	// 自动事务
+	transaction2()
+
+	c.JSON(http.StatusOK, res)
+	return
+}
+
+// 手动
+func transaction1() {
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second*3))
+
+	defer cancel()
+
+	tx := orm.MysqlOrm.Statement.DB.WithContext(ctx).Begin()
 
 	test := test.TestOne{
 		Date: models.GormTime{time.Now()},
 	}
 
-	tx.Create(&test)
+	time.Sleep(time.Second * 5)
 
-	tx.Commit()
+	aa := tx.Create(&test)
 
-	fmt.Println("11111")
+	if aa.Error != nil {
+		fmt.Println("create 报错 ：" + aa.Error.Error())
+	}
 
-	c.JSON(http.StatusOK, res)
-	return
+	result := tx.Commit()
+
+	if result.Error != nil {
+		fmt.Println("Commit 报错 ：" + tx.Error.Error())
+	}
+}
+
+// 自动
+func transaction2() {
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second*3))
+
+	defer cancel()
+
+	trans := orm.MysqlOrm.Statement.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		test := test.TestOne{
+			Date: models.GormTime{time.Now()},
+		}
+
+		// time.Sleep(time.Second * 5)
+
+		result := tx.Create(&test)
+		if result.Error != nil {
+			fmt.Println("create err: " + result.Error.Error())
+			return result.Error
+		}
+
+		// 返回 nil 。提交事务
+		return nil
+	})
+
+	if trans != nil {
+		fmt.Println("trans err: " + trans.Error())
+	}
+
 }
