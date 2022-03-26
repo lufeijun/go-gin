@@ -36,13 +36,15 @@ var (
 	REDIS_DB   int
 
 	// 数据库
-	DbHost string
-	DbPort string
-	DbDB   string
-	DbUser string
-	DbPass string
-	DbConf string
-	DbPath = DbHost + DbPort
+	DbHost         string
+	DbPort         string
+	DbDB           string
+	DbUser         string
+	DbPass         string
+	DbConf         string
+	DbPath         = DbHost + DbPort
+	DbMaxIdleConns int
+	DbMaxOpenConns int
 
 	KafkaBroker string
 )
@@ -82,6 +84,19 @@ func init() {
 	DbDB = cfg.Section("mysql").Key("dbname").String()
 	DbUser = cfg.Section("mysql").Key("username").String()
 	DbPass = cfg.Section("mysql").Key("password").String()
+	DbConf = cfg.Section("mysql").Key("conf").String()
+
+	DbMaxIdleConns, err = cfg.Section("mysql").Key("max_idle_conns").Int()
+
+	if err != nil {
+		DbMaxIdleConns = 10
+	}
+
+	DbMaxOpenConns, err = cfg.Section("mysql").Key("max_open_conns").Int()
+	if err != nil {
+		DbMaxOpenConns = 100
+	}
+
 	DbConf = cfg.Section("mysql").Key("conf").String()
 
 	// redis

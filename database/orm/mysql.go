@@ -23,8 +23,8 @@ func init() {
 	}
 
 	sqlDB, _ := MysqlOrm.DB()
-	sqlDB.SetMaxIdleConns(2)
-	sqlDB.SetMaxOpenConns(5)
+	sqlDB.SetMaxIdleConns(config.DbMaxIdleConns)
+	sqlDB.SetMaxOpenConns(config.DbMaxOpenConns)
 
 	// 这里不能有这句话，否则链接都被关闭了
 	// defer sqlDB.Close()

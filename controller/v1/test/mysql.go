@@ -30,7 +30,7 @@ func MysqlOne(c *gin.Context) {
 
 	test := test.TestOne{
 		// Date: models.GormTime{time.Now()},
-		Date: models.GormTime{str},
+		Date: models.GormTime{Time: str},
 	}
 
 	result := orm.MysqlOrm.Create(&test)
@@ -72,7 +72,7 @@ func transaction1() {
 	tx := orm.MysqlOrm.Statement.DB.WithContext(ctx).Begin()
 
 	test := test.TestOne{
-		Date: models.GormTime{time.Now()},
+		Date: models.GormTime{Time: time.Now()},
 	}
 
 	time.Sleep(time.Second * 5)
@@ -99,7 +99,7 @@ func transaction2() {
 
 	trans := orm.MysqlOrm.Statement.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		test := test.TestOne{
-			Date: models.GormTime{time.Now()},
+			Date: models.GormTime{Time: time.Now()},
 		}
 
 		// time.Sleep(time.Second * 5)
@@ -118,4 +118,40 @@ func transaction2() {
 		fmt.Println("trans err: " + trans.Error())
 	}
 
+}
+
+// 多协程查询
+func Mysql3(c *gin.Context) {
+	res := response.GetResponse()
+
+	for i := 0; i < 10; i++ {
+		go asyncInsert()
+	}
+
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
+
+	c.JSON(http.StatusOK, res)
+	return
+}
+
+// 协程插入
+func asyncInsert() {
+	orm.MysqlOrm.Statement.DB.Transaction(func(tx *gorm.DB) error {
+		test := test.TestOne{
+			Date: models.GormTime{Time: time.Now()},
+		}
+
+		time.Sleep(time.Second * 10)
+
+		result := tx.Create(&test)
+		if result.Error != nil {
+			fmt.Println("create err: " + result.Error.Error())
+			return result.Error
+		}
+
+		// 返回 nil 。提交事务
+		return nil
+	})
+
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
 }

@@ -39,6 +39,7 @@ func LoadApi(api *gin.RouterGroup) {
 		{
 			mysqltest.POST("one", test.MysqlOne)
 			mysqltest.POST("two", test.Mysql2)
+			mysqltest.POST("three", test.Mysql3)
 		}
 
 	}
