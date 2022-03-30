@@ -42,6 +42,12 @@ func LoadApi(api *gin.RouterGroup) {
 			mysqltest.POST("three", test.Mysql3)
 		}
 
+		// 爬虫
+		anjuke := testApi.Group("anjuke")
+		{
+			anjuke.GET("index", test.Anjuke)
+		}
+
 	}
 	// v2 版
 	testApiV2 := api.Group("test/v2")
