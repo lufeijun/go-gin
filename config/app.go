@@ -36,6 +36,9 @@ var (
 	REDIS_DB   int
 
 	// 数据库
+
+	// mysql
+	DbIsOpen       bool
 	DbHost         string
 	DbPort         string
 	DbDB           string
@@ -45,6 +48,18 @@ var (
 	DbPath         = DbHost + DbPort
 	DbMaxIdleConns int
 	DbMaxOpenConns int
+
+	// clickhouse
+	Clickhouse_Is_Open        bool
+	Clickhouse_Host           string
+	Clickhouse_Port           string
+	Clickhouse_Db_Name        string
+	Clickhouse_User_Name      string
+	Clickhouse_Password       string
+	Clickhouse_Read_Timeout   string
+	Clickhouse_Write_Timeout  string
+	Clickhouse_Max_Idle_Conns int
+	Clickhouse_Max_Open_Conns int
 
 	KafkaBroker string
 )
@@ -76,9 +91,17 @@ func init() {
 	MAIL_FROM = cfg.Section("email").Key("from").String()
 	MAIL_PASSWORD = cfg.Section("email").Key("password").String()
 	MAIL_NAME = cfg.Section("email").Key("name").String()
-	MAIL_IS_SEND, _ = cfg.Section("email").Key("is_send").Bool()
+	MAIL_IS_SEND, err = cfg.Section("email").Key("is_send").Bool()
+	if err != nil {
+		MAIL_IS_SEND = false
+	}
 
 	// mysql
+	// Bbis_open
+	DbIsOpen, err = cfg.Section("mysql").Key("is_open").Bool()
+	if err != nil {
+		DbIsOpen = false
+	}
 	DbHost = cfg.Section("mysql").Key("host").String()
 	DbPort = cfg.Section("mysql").Key("port").String()
 	DbDB = cfg.Section("mysql").Key("dbname").String()
@@ -98,6 +121,29 @@ func init() {
 	}
 
 	DbConf = cfg.Section("mysql").Key("conf").String()
+
+	// clickhouse
+	Clickhouse_Is_Open, err = cfg.Section("clickhouse").Key("is_open").Bool()
+	if err != nil {
+		Clickhouse_Is_Open = false
+	}
+	Clickhouse_Host = cfg.Section("clickhouse").Key("host").String()
+	Clickhouse_Port = cfg.Section("clickhouse").Key("port").String()
+	Clickhouse_Db_Name = cfg.Section("clickhouse").Key("port").String()
+	Clickhouse_Db_Name = cfg.Section("clickhouse").Key("dbname").String()
+	Clickhouse_User_Name = cfg.Section("clickhouse").Key("username").String()
+	Clickhouse_Password = cfg.Section("clickhouse").Key("password").String()
+	Clickhouse_Read_Timeout = cfg.Section("clickhouse").Key("read_timeout").String()
+	Clickhouse_Write_Timeout = cfg.Section("clickhouse").Key("write_timeout").String()
+	Clickhouse_Max_Idle_Conns, err = cfg.Section("clickhouse").Key("max_idle_conns").Int()
+	if err != nil {
+		Clickhouse_Max_Idle_Conns = 3
+	}
+
+	Clickhouse_Max_Open_Conns, err = cfg.Section("clickhouse").Key("max_open_conns").Int()
+	if err != nil {
+		Clickhouse_Max_Open_Conns = 100
+	}
 
 	// redis
 	REDIS_ADDR = cfg.Section("redis").Key("addr").String()

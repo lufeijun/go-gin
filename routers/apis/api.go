@@ -42,6 +42,11 @@ func LoadApi(api *gin.RouterGroup) {
 			mysqltest.POST("three", test.Mysql3)
 		}
 
+		clickhouseTest := testApi.Group("clickhouse")
+		{
+			clickhouseTest.POST("one", test.ClickhouseOne)
+		}
+
 		// 爬虫
 		anjuke := testApi.Group("anjuke")
 		{
