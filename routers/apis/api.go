@@ -45,6 +45,7 @@ func LoadApi(api *gin.RouterGroup) {
 		clickhouseTest := testApi.Group("clickhouse")
 		{
 			clickhouseTest.POST("one", test.ClickhouseOne)
+			clickhouseTest.POST("two", test.ClickhouseTwo)
 		}
 
 		// 爬虫
