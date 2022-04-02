@@ -54,6 +54,12 @@ func LoadApi(api *gin.RouterGroup) {
 			anjuke.GET("index", test.Anjuke)
 		}
 
+		// 平滑重启的测试
+		reloadTest := testApi.Group("reload")
+		{
+			reloadTest.POST("one", test.ReloadOne)
+		}
+
 	}
 	// v2 版
 	testApiV2 := api.Group("test/v2")

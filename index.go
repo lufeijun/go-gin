@@ -8,6 +8,7 @@ import (
 	"gin/routers"
 	"gin/tool/logger"
 
+	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 )
 
@@ -41,8 +42,15 @@ func main() {
 	routers.InitRouter(r)
 
 	// 3.监听端口，默认在8080
-	err := r.Run(":" + config.APP_PORT)
+	// err := r.Run(":" + config.APP_PORT)
+	// if err != nil {
+	// 	panic("启动失败：err=" + err.Error())
+	// }
+
+	// 平滑重启问题
+	err := endless.ListenAndServe(":"+config.APP_PORT, r)
 	if err != nil {
 		panic("启动失败：err=" + err.Error())
 	}
+
 }

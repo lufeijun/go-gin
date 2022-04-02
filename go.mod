@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/Shopify/sarama v1.29.1 // indirect
+	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6 // indirect
 	github.com/gin-contrib/sessions v0.0.4 // indirect
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-gomail/gomail v0.0.0-20160411212932-81ebce5c23df // indirect
