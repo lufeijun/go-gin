@@ -46,6 +46,8 @@ func LoadApi(api *gin.RouterGroup) {
 		{
 			clickhouseTest.POST("one", test.ClickhouseOne)
 			clickhouseTest.POST("two", test.ClickhouseTwo)
+			clickhouseTest.POST("wechat_user_sessions", test.Wechat_user_sessions)
+			clickhouseTest.POST("wechat_user_sessions_list", test.Wechat_user_sessions_list)
 		}
 
 		// 爬虫
