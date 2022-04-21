@@ -81,3 +81,24 @@ func RedisGet(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
+
+// 切片
+func SliceOne(c *gin.Context) {
+
+	intslice := make([]int, 5)
+
+	fmt.Println("长度===", len(intslice))
+
+	intslice = append(intslice, 10)
+
+	fmt.Println("长度===", len(intslice))
+
+	// intslice[11] = 100  报错
+	// fmt.Println("长度===", len(intslice))
+
+	for index, v := range intslice {
+		fmt.Println(index, "===", v)
+	}
+
+	c.String(http.StatusOK, "ok")
+}

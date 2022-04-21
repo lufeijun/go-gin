@@ -17,6 +17,7 @@ func LoadApi(api *gin.RouterGroup) {
 	{
 		testApi.GET("index", test.Index)
 		testApi.GET("panic", test.Panic)
+		testApi.GET("slice", test.SliceOne)
 
 		// redis
 		testApi.GET("redis/set", test.RedisSet)
@@ -54,6 +55,12 @@ func LoadApi(api *gin.RouterGroup) {
 		anjuke := testApi.Group("anjuke")
 		{
 			anjuke.GET("index", test.Anjuke)
+		}
+
+		// websocket
+		websockettest := testApi.Group("websocket")
+		{
+			websockettest.POST("one", test.SocketOne)
 		}
 
 	}
