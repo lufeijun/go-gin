@@ -13,13 +13,38 @@ import (
 )
 
 func Index(c *gin.Context) {
-	res := response.GetResponse()
 
-	res.SetData("v1")
+	count := 100
 
-	c.JSON(http.StatusOK, res)
+	wg.Add(count)
+
+	for i := 0; i < count; i++ {
+		go curl()
+	}
+
+	wg.Wait()
+
+	c.String(http.StatusOK, "{ok}")
 
 	return
+}
+
+func curl() {
+	for i := 0; i < 1000; i++ {
+		res, err := http.Get("http://192.168.0.33:9999")
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		if res.StatusCode != 200 {
+			fmt.Println(res.StatusCode)
+		}
+
+		res.Body.Close()
+	}
+
+	wg.Done()
 }
 
 func Jwt(c *gin.Context) {
