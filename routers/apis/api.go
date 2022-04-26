@@ -51,6 +51,12 @@ func LoadApi(api *gin.RouterGroup) {
 			clickhouseTest.POST("wechat_user_sessions_list", test.Wechat_user_sessions_list)
 		}
 
+		pgsqlTest := testApi.Group("pgsql")
+		{
+			pgsqlTest.POST("one", test.PgsqlOne)
+			pgsqlTest.POST("two", test.PgsqlTwo)
+		}
+
 		// 爬虫
 		anjuke := testApi.Group("anjuke")
 		{

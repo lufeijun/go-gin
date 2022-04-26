@@ -61,6 +61,18 @@ var (
 	Clickhouse_Max_Idle_Conns int
 	Clickhouse_Max_Open_Conns int
 
+	// pgsql
+	Pgsql_Is_Open        bool
+	Pgsql_Host           string
+	Pgsql_Port           string
+	Pgsql_Db_Name        string
+	Pgsql_User_Name      string
+	Pgsql_Password       string
+	Pgsql_Sslmode        string
+	Pgsql_Time_Zone      string
+	Pgsql_Max_Idle_Conns int
+	Pgsql_Max_Open_Conns int
+
 	KafkaBroker string
 )
 
@@ -129,7 +141,6 @@ func init() {
 	}
 	Clickhouse_Host = cfg.Section("clickhouse").Key("host").String()
 	Clickhouse_Port = cfg.Section("clickhouse").Key("port").String()
-	Clickhouse_Db_Name = cfg.Section("clickhouse").Key("port").String()
 	Clickhouse_Db_Name = cfg.Section("clickhouse").Key("dbname").String()
 	Clickhouse_User_Name = cfg.Section("clickhouse").Key("username").String()
 	Clickhouse_Password = cfg.Section("clickhouse").Key("password").String()
@@ -143,6 +154,28 @@ func init() {
 	Clickhouse_Max_Open_Conns, err = cfg.Section("clickhouse").Key("max_open_conns").Int()
 	if err != nil {
 		Clickhouse_Max_Open_Conns = 100
+	}
+
+	// pgsql
+	Pgsql_Is_Open, err = cfg.Section("pgsql").Key("is_open").Bool()
+	if err != nil {
+		Pgsql_Is_Open = false
+	}
+	Pgsql_Host = cfg.Section("pgsql").Key("host").String()
+	Pgsql_Port = cfg.Section("pgsql").Key("port").String()
+	Pgsql_Db_Name = cfg.Section("pgsql").Key("dbname").String()
+	Pgsql_User_Name = cfg.Section("pgsql").Key("username").String()
+	Pgsql_Password = cfg.Section("pgsql").Key("password").String()
+	Pgsql_Sslmode = cfg.Section("pgsql").Key("sslmode").String()
+	Pgsql_Time_Zone = cfg.Section("pgsql").Key("time_zone").String()
+	Pgsql_Max_Idle_Conns, err = cfg.Section("pgsql").Key("max_idle_conns").Int()
+	if err != nil {
+		Pgsql_Max_Idle_Conns = 3
+	}
+
+	Pgsql_Max_Open_Conns, err = cfg.Section("pgsql").Key("max_open_conns").Int()
+	if err != nil {
+		Pgsql_Max_Open_Conns = 100
 	}
 
 	// redis
