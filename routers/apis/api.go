@@ -41,6 +41,7 @@ func LoadApi(api *gin.RouterGroup) {
 			mysqltest.POST("one", test.MysqlOne)
 			mysqltest.POST("two", test.Mysql2)
 			mysqltest.POST("three", test.Mysql3)
+			mysqltest.POST("four", test.Mysql4)
 		}
 
 		clickhouseTest := testApi.Group("clickhouse")
@@ -55,6 +56,8 @@ func LoadApi(api *gin.RouterGroup) {
 		{
 			pgsqlTest.POST("one", test.PgsqlOne)
 			pgsqlTest.POST("two", test.PgsqlTwo)
+			pgsqlTest.POST("user/insert", test.PgsqlUserInsert)
+			pgsqlTest.POST("user/get", test.PgsqlUserGet)
 		}
 
 		// 爬虫

@@ -155,3 +155,32 @@ func asyncInsert() {
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
 }
+
+func Mysql4(c *gin.Context) {
+	res := response.GetResponse()
+
+	for i := 0; i < 20; i++ {
+		go asyncInsert4()
+	}
+
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
+
+	c.JSON(http.StatusOK, res)
+	return
+}
+
+func asyncInsert4() {
+
+	for i := 0; i < 100; i++ {
+		test := test.TestOne{
+			Date: models.GormTime{time.Now()},
+		}
+
+		if i%10 == 0 {
+			time.Sleep(time.Second)
+		}
+
+		orm.MysqlOrm.Create(&test)
+
+	}
+}
